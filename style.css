@@ -1,4 +1,4 @@
-/* ── CONFIGURAÇÕES GERAIS ── */
+/* ── CONFIGURAÇÕES GERAIS DA PÁGINA ── */
 *, *::before, *::after { 
   box-sizing: border-box; 
   margin: 0; 
@@ -6,8 +6,8 @@
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
-  background-color: #F4F6F8; /* Tom cinza/verde claro de fundo para destacar o bloco branco */
+  font-family: Arial, sans-serif;
+  background-color: #F4F6F8;
   color: #333333;
   min-height: 100vh;
 }
@@ -21,91 +21,9 @@ main {
   gap: 35px;
 }
 
-/* ── HERO TOPO (Visual Escuro/Dourado Premium) ── */
-.hero {
-  position: relative;
-  width: 100%;
-  min-height: 360px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  overflow: hidden;
-  padding: 60px 20px;
-  background-color: #1A1400;
-}
-
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url('fundo-login.jpg'); /* Substitua pelo link correto da sua imagem */
-  background-size: cover;
-  background-position: center;
-  opacity: 0.35;
-  z-index: 0;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, rgba(26,20,0,0.7) 0%, rgba(26,20,0,0.85) 100%);
-  z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-}
-
-.hero h1 {
-  font-family: 'Playfair Display', serif;
-  font-weight: 900;
-  font-size: clamp(2rem, 5vw, 3.8rem);
-  color: #F5C200;
-  letter-spacing: 0.06em;
-  text-shadow: 0 3px 15px rgba(0,0,0,0.6);
-  margin-bottom: 8px;
-}
-
-.hero h2 {
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 400;
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-  color: #FFFFFF;
-  letter-spacing: 0.05em;
-}
-
-.hero-divider {
-  width: 100px;
-  height: 2px;
-  background: #F5C200;
-  margin: 15px auto 0;
-  opacity: 0.6;
-}
-
-/* ── FIAP BADGE ── */
-.fiap-badge {
-  display: flex;
-  justify-content: center;
-  margin: -22px auto 0;
-  position: relative;
-  z-index: 5;
-}
-
-.fiap-badge span {
-  background: linear-gradient(135deg, #C9960C, #F5C200);
-  color: #1A1400;
-  font-weight: 600;
-  font-size: clamp(0.75rem, 1.8vw, 0.9rem);
-  text-transform: uppercase;
-  padding: 10px 25px;
-  border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(245,194,0,0.3);
-}
-
-/* ── BLOCO UNIFICADO (Estilo idêntico à imagem de referência) ── */
-.card-unificado {
+/* ── CONTAINER REUTILIZÁVEL (Usado nos dois blocos principais) ── */
+.card-unificado,
+.card-atendimento-refinado {
   background: #FFFFFF;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
@@ -119,10 +37,11 @@ main {
   align-items: flex-start;
   margin-bottom: 25px;
   gap: 15px;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 15px;
 }
 
 .header-titulos h3 {
-  font-family: sans-serif;
   font-size: 1.4rem;
   color: #1A202C;
   font-weight: 700;
@@ -134,6 +53,7 @@ main {
   color: #718096;
 }
 
+/* Botões do Topo dos Blocos */
 .btn-minimizar {
   background-color: #22C55E;
   color: #FFFFFF;
@@ -146,9 +66,25 @@ main {
   white-space: nowrap;
 }
 
-/* Títulos das Subsecções (Texto amarelo e linha amarela horizontal) */
+.btn-add-novo {
+  background-color: #0056B3;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.btn-add-novo:hover {
+  background-color: #004085;
+}
+
+/* ── SUBSEÇÕES INTERNAS (Divisores Amarelos) ── */
 .subsecao-titulo {
-  font-family: sans-serif;
   color: #F5C200;
   text-transform: uppercase;
   font-size: 0.95rem;
@@ -160,7 +96,7 @@ main {
   margin-bottom: 5px;
 }
 
-/* Layout de Inputs do Bloco Unificado */
+/* ── ALINHAMENTO DO FORMULÁRIO (Geral para os dois blocos) ── */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -177,16 +113,22 @@ main {
   grid-column: 1 / -1; 
 }
 
-.card-unificado label {
+/* Estilo padronizado de Labels para toda a aplicação */
+main label {
   font-size: 0.85rem;
   color: #2D3748;
   font-weight: 700;
+  text-transform: none;
 }
 
-.card-unificado input[type="text"],
-.card-unificado input[type="email"],
-.card-unificado input[type="tel"],
-.card-unificado textarea {
+/* Estilo uniforme de Inputs para a área estática e dinâmica */
+main input[type="text"],
+main input[type="email"],
+main input[type="tel"],
+main input[type="date"],
+main input[type="time"],
+main select,
+main textarea {
   width: 100%;
   background: #FFFFFF;
   border: 1px solid #CBD5E1;
@@ -195,21 +137,23 @@ main {
   font-size: 0.95rem;
   color: #334155;
   outline: none;
-  transition: border-color 0.2s;
+  font-family: Arial, sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.card-unificado input:focus, 
-.card-unificado textarea:focus {
-  border-color: #F5C200;
-  box-shadow: 0 0 0 3px rgba(245,194,0,0.15);
+main input:focus, 
+main select:focus, 
+main textarea:focus {
+  border-color: #0056B3;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
 }
 
-.card-unificado textarea {
+main textarea {
   resize: vertical;
   min-height: 100px;
 }
 
-/* Botão Azul de Salvar */
+/* Botão Azul de Salvar (Qualificação) */
 .btn-salvar-banco {
   background-color: #0056B3;
   color: #FFFFFF;
@@ -227,14 +171,88 @@ main {
   background-color: #004085;
 }
 
-/* ── CARD SEGUNDÁRIO (Registro de Atendimentos) ── */
-.card-atendimento {
+/* ── ELEMENTOS DINÂMICOS (CARDS DE ATENDIMENTO) ── */
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 15px;
+}
+
+.attendance-entry {
   background: #FFFFFF;
   border: 1px solid #CBD5E1;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  animation: surgimentoSuave 0.3s ease-out;
 }
 
-.card-atendimento-header {
-  background: #1
+@keyframes surgimentoSuave {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.entry-header {
+  background-color: #F8FAFC;
+  padding: 12px 20px;
+  border-bottom: 1px solid #CBD5E1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.entry-seq {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1A202C;
+}
+
+.btn-remove {
+  background: transparent;
+  color: #E53E3E;
+  border: 1px solid #FED7D7;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-remove:hover {
+  background: #FFF5F5;
+  border-color: #E53E3E;
+}
+
+.entry-body {
+  padding: 20px;
+}
+
+/* ── ÁREA DE UPLOAD DE FOTOS CONFIGURADA ── */
+.photo-upload-area {
+  border: 2px dashed #CBD5E1 !important;
+  padding: 25px !important;
+  text-align: center;
+  background: #F8FAFC !important;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  transition: all 0.2s;
+}
+
+.photo-upload-area:hover {
+  background: #F1F5F9 !important;
+  border-color: #0056B3 !important;
+}
+
+.photo-upload-area .upload-icon {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.photo-upload-area p {
+  color: #64748B !important;
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+}

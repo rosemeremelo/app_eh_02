@@ -256,3 +256,85 @@ main textarea {
   font-weight: 500 !important;
   font-size: 0.85rem !important;
 }
+
+/* ── ESTILIZAÇÃO DO BANCO DE EMPREENDIMENTOS QUALIFICADOS ── */
+.banco-tabela-header {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 2fr 1.5fr;
+  background-color: #F8FAFC;
+  padding: 12px 20px;
+  border-bottom: 1px solid #E2E8F0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1A202C;
+  margin-top: 15px;
+}
+
+.empreendimento-linha {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 2fr 1.5fr;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  animation: surgimentoSuave 0.3s ease-out;
+}
+
+.empresa-info h4 {
+  font-size: 1.05rem;
+  color: #1A1400;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.empresa-info p, .resp-info p, .contato-info p {
+  font-size: 0.85rem;
+  color: #64748B;
+  margin: 2px 0;
+}
+
+.empresa-info .link-detalhes {
+  font-size: 0.8rem;
+  color: #0056B3;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+/* Botão Azul de Abrir Atendimentos */
+.btn-abrir-atendimentos {
+  background-color: #0056B3;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-abrir-atendimentos:hover {
+  background-color: #004085;
+}
+
+/* Alinhamento dos botões de ação na direita */
+.col-acao-botoes {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-pdf-vermelho {
+  background-color: #DC2626;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 4px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}

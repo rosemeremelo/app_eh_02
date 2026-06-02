@@ -338,3 +338,116 @@ main textarea {
   justify-content: center;
   cursor: pointer;
 }
+/* Container Principal do Card de Atendimento */
+.card-atendimento-premium {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    margin-bottom: 30px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Cabeçalho Azul Corporativo do Card */
+.atendimento-header-main {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #f5c200; /* Linha de destaque amarela */
+}
+
+.atendimento-titulos h3 {
+    color: #ffffff;
+    margin: 0 0 5px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.atendimento-titulos p {
+    color: #94a3b8;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.atendimento-titulos strong {
+    color: #f5c200;
+}
+
+/* Botão de Fechar (X) no Cabeçalho */
+.btn-fechar-atendimento {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-fechar-atendimento:hover {
+    background: #ef4444;
+    transform: scale(1.05);
+}
+
+/* Área Interna (Corpo) do Card */
+.atendimento-body-main {
+    padding: 25px;
+    background: #ffffff;
+}
+
+/* Botão Amarelo de Inserção */
+.btn-novo-atendimento-amarelo {
+    background: #f5c200;
+    color: #0f172a;
+    border: none;
+    padding: 12px 20px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(245, 194, 0, 0.3);
+}
+
+.btn-novo-atendimento-amarelo:hover {
+    background: #e0b000;
+    transform: translateY(-1px);
+}
+
+/* Rodapé do Card com as Ações Finais */
+.atendimento-footer-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Botão Verde Sincronizar */
+.btn-sincronizar-verde {
+    background: #10b981;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
+}
+
+.btn-sincronizar-verde:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}

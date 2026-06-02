@@ -9,48 +9,70 @@ function addAttendance() {
   const div = document.createElement('div');
   div.className = 'attendance-entry';
   div.id = id;
+  
+  // Injeta a estrutura exata alinhada com os estilos do seu CSS unificado
   div.innerHTML = `
     <div class="entry-header">
-      <span class="entry-seq">Atendimento #${seq}</span>
-      <button class="btn-remove" onclick="removeAttendance('${id}')">✕ Remover</button>
+      <span class="entry-seq"># NOVO REGISTRO EM PREENCHIMENTO</span>
+      <button class="btn-remove" type="button" onclick="removeAttendance('${id}')">Excluir</button>
     </div>
     <div class="entry-body">
       <div class="form-grid">
+        
         <div class="form-group">
-          <label>Data</label>
-          <input type="date" />
+          <label>Data *</label>
+          <input type="date" value="2026-06-01" />
         </div>
+        
         <div class="form-group">
-          <label>Horário</label>
+          <label>Horário de Início *</label>
           <input type="time" />
         </div>
+
         <div class="form-group">
-          <label>Modalidade</label>
+          <label>Horário de Fim *</label>
+          <input type="time" />
+        </div>
+        
+        <div class="form-group">
+          <label>Modalidade *</label>
           <select>
-            <option value="" disabled selected>Selecione…</option>
+            <option value="online" selected>Online</option>
             <option value="presencial">Presencial</option>
-            <option value="online">Online</option>
             <option value="hibrido">Híbrido</option>
           </select>
         </div>
+        
         <div class="form-group full">
-          <label>Mentor(es)</label>
-          <input type="text" placeholder="Nome(s) do(s) mentor(es)" />
+          <label>Assunto da Mentoria *</label>
+          <input type="text" placeholder="Ex: Ajuste de Pitch, Validação Comercial, UX/UI..." />
         </div>
+
         <div class="form-group full">
-          <label>Descrição Detalhada</label>
-          <textarea placeholder="Descreva detalhadamente o que foi abordado neste atendimento…"></textarea>
+          <label>Equipe de Mentores Vinculados * <span style="font-weight: normal; font-size: 0.75rem; color: #64748B;">(Segure CTRL para múltiplos)</span></label>
+          <select multiple style="height: 80px; padding: 5px;">
+            <option value="1">Prof. Coordenador FIAP (Coordenador)</option>
+            <option value="2">Aline Mendes (Mentor)</option>
+            <option value="3">Rosemere Melo (Administrador)</option>
+          </select>
         </div>
+        
         <div class="form-group full">
-          <label>Evidência do Atendimento (Fotos)</label>
+          <label>Descrição Detalhada das Ações Realizadas *</label>
+          <textarea placeholder="Relate as decisões tomadas..."></textarea>
+        </div>
+        
+        <div class="form-group full">
+          <label>Evidências do Atendimento (Máximo 5 fotos)</label>
           <label class="photo-upload-area" for="file-${seq}">
-            <div class="upload-icon">📷</div>
-            <p>Clique para selecionar fotos ou arraste aqui</p>
-            <p style="font-size:0.75rem;opacity:0.6;margin-top:4px;">JPG, PNG, WEBP — múltiplas imagens aceitas</p>
-            <input type="file" id="file-${seq}" accept="image/*" multiple onchange="handlePhotos(event,'preview-${seq}')" />
+            <input type="file" id="file-${seq}" accept="image/*" multiple onchange="handlePhotos(event, 'preview-${seq}')" />
+            <div style="color: #64748B; font-size: 0.9rem;">
+              <span style="background: #E2E8F0; padding: 5px 10px; border: 1px solid #CBD5E1; border-radius: 4px; color: #334155; margin-right: 8px; font-weight: bold;">Escolher Arquivos</span> Nenhum arquivo escolhido
+            </div>
           </label>
-          <div class="photo-preview" id="preview-${seq}"></div>
+          <div class="photo-preview" id="preview-${seq}" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
         </div>
+
       </div>
     </div>
   `;
@@ -69,20 +91,46 @@ function removeAttendance(id) {
   }
 }
 
+function finalizeAttendance() {
+  alert("Atendimentos salvos e sincronizados com sucesso com o banco de dados corporativo!");
+}
+
 function handlePhotos(event, previewId) {
   const preview = document.getElementById(previewId);
+  if (!preview) return;
   const files = Array.from(event.target.files);
   files.forEach(file => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const thumb = document.createElement('div');
       thumb.className = 'photo-thumb';
+      thumb.style.position = 'relative';
+      thumb.style.width = '80px';
+      thumb.style.height = '80px';
+      
       const img = document.createElement('img');
       img.src = e.target.result;
       img.alt = file.name;
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '4px';
+      
       const btn = document.createElement('button');
       btn.className = 'remove-photo';
       btn.innerHTML = '✕';
+      btn.style.position = 'absolute';
+      btn.style.top = '2px';
+      btn.style.right = '2px';
+      btn.style.background = 'rgba(229, 62, 62, 0.9)';
+      btn.style.color = 'white';
+      btn.style.border = 'none';
+      btn.style.borderRadius = '50%';
+      btn.style.width = '18px';
+      btn.style.height = '18px';
+      btn.style.cursor = 'pointer';
+      btn.style.fontSize = '10px';
+      
       btn.onclick = () => thumb.remove();
       thumb.appendChild(img);
       thumb.appendChild(btn);
@@ -114,6 +162,7 @@ document.getElementById('cpf').addEventListener('input', function() {
 
 // Máscara para Telefones
 function phoneMask(el) {
+  if (!el) return;
   el.addEventListener('input', function() {
     let v = this.value.replace(/\D/g,'');
     if (v.length <= 10) v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
@@ -147,7 +196,11 @@ function submitForm() {
   const secaoBanco = document.getElementById('secao-banco-empreendimentos');
   secaoBanco.style.display = 'block';
 
-  // 4. Criar a estrutura HTML idêntica à imagem fornecida
+  // Guardar os valores em variáveis de texto limpas para passar com segurança na string do onclick
+  const nomeEmpresaValor = nomeEmpresaInput.value.replace(/'/g, "\\'");
+  const nomeRespValor = nomeRespInput.value.replace(/'/g, "\\'");
+
+  // 4. Criar a estrutura HTML com o onclick CORRIGIDO chamando a função abrirAtendimentosDoProjeto
   const listaSalvos = document.getElementById('lista-empreendimentos-salvos');
   const novaLinha = document.createElement('div');
   novaLinha.className = 'empreendimento-linha';
@@ -167,12 +220,12 @@ function submitForm() {
       <p>${telComInput.value || telPesInput.value || 'Não informado'}</p>
     </div>
     <div class="col-acao-botoes">
-      <button class="btn-abrir-atendimentos" type="button">Abrir Atendimentos</button>
+      <button class="btn-abrir-atendimentos" type="button" onclick="abrirAtendimentosDoProjeto('${nomeEmpresaValor}', '${nomeRespValor}')">Abrir Atendimentos</button>
       <button class="btn-pdf-vermelho" type="button" title="Gerar PDF">📄</button>
     </div>
   `;
 
-  // Adicionar o novo item ao topo ou final da lista do banco
+  // Adicionar o novo item ao final da lista do banco
   listaSalvos.appendChild(novaLinha);
 
   // 5. Exibir o Toast de Sucesso nativo da sua aplicação
@@ -193,5 +246,24 @@ function submitForm() {
   emailInput.value = '';
   telPesInput.value = '';
 }
+
 // Adiciona o primeiro atendimento automaticamente ao carregar
 addAttendance();
+
+function abrirAtendimentosDoProjeto(nomeEmpresa, nomeResponsavel) {
+  // 1. Mostra o bloco de atendimentos que estava escondido
+  const blocoAtendimentos = document.getElementById('bloco-atendimentos');
+  blocoAtendimentos.style.display = 'block';
+  
+  // 2. Atualiza textualmente o cabeçalho azul com os dados dinâmicos
+  document.getElementById('projeto-atendimento-nome').innerText = `${nomeEmpresa} (Resp: ${nomeResponsavel})`;
+  
+  // 3. Limpa históricos anteriores que estavam abertos na tela antes de listar os novos
+  document.getElementById('attendanceList').innerHTML = '';
+  
+  // 4. Cria automaticamente o primeiro card de atendimento em branco para começar a preencher
+  addAttendance();
+  
+  // 5. Dá um foco visual rolando a página até o bloco de atendimentos
+  blocoAtendimentos.scrollIntoView({ behavior: 'smooth' });
+}

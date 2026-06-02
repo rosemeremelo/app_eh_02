@@ -26,6 +26,8 @@
   </div>
 
   <main>
+    
+    <!-- CARD 1: FORMULÁRIO DE QUALIFICAÇÃO INICIAL -->
     <section class="card-unificado">
       
       <div class="card-unificado-header">
@@ -93,41 +95,62 @@
       </div>
     </section>
 
-    <section class="card-unificado" id="secao-banco-empreendimentos" style="display: none;">
-  <div class="card-unificado-header">
-    <div class="header-titulos">
-      <h3 style="color: #F5C200;">2. Banco de Empreendimentos Qualificados</h3>
-      <p>Selecione um Empreendedor/Empresa abaixo para visualizar o perfil e gerenciar seus Atendimentos.</p>
-    </div>
-  </div>
-  
-  <div class="card-unificado-body">
-    <div class="banco-tabela-header">
-      <div class="col-empresa">Empresa / Projeto</div>
-      <div class="col-responsavel">Responsável</div>
-      <div class="col-contato">E-mail / Telefone</div>
-      <div class="col-acao">Ação</div>
-    </div>
-    
-    <div id="lista-empreendimentos-salvos"></div>
-  </div>
-</section>
-
-    <section class="card-atendimento">
-      <div class="card-atendimento-header">
-        <div class="card-header-icon">📋</div>
-        <h3>Registro de Atendimentos</h3>
-      </div>
-      <div class="card-atendimento-body">
-        <div class="attendance-list" id="attendanceList"></div>
-
-        <div class="actions-row" style="margin-top:20px;">
-          <button class="btn-add" onclick="addAttendance()">
-            <span>＋</span> Adicionar Atendimento
-          </button>
+    <!-- BLOCO 1: BANCO DE EMPREENDIMENTOS QUALIFICADOS -->
+    <section class="card-unificado" id="secao-banco-empreendimentos" style="margin-top: 35px; display: none;">
+      <div class="card-unificado-header">
+        <div class="header-titulos">
+          <h3 style="color: #F5C200;">2. Banco de Empreendimentos Qualificados</h3>
+          <p>Selecione um Empreendedor/Empresa abaixo para visualizar o perfil e gerenciar seus Atendimentos.</p>
         </div>
       </div>
+      
+      <div class="card-unificado-body">
+        <!-- Cabeçalho da Tabela -->
+        <div class="banco-tabela-header">
+          <div class="col-empresa">Empresa / Projeto</div>
+          <div class="col-responsavel">Responsável</div>
+          <div class="col-contato">E-mail / Telefone</div>
+          <div class="col-acao">Ação</div>
+        </div>
+        
+        <!-- Onde os registros salvos são injetados -->
+        <div id="lista-empreendimentos-salvos"></div>
+      </div>
     </section>
+
+    <!-- BLOCO 2: HISTÓRICO E REGISTRO DE ATENDIMENTOS (TOTALMENTE SEPARADO) -->
+    <section class="card-atendimento-premium" id="bloco-atendimentos" style="margin-top: 35px; display: none;">
+      
+      <!-- Cabeçalho Superior Azul Corporativo -->
+      <div class="atendimento-header-main">
+        <div class="atendimento-titulos">
+          <h3>Histórico e Registro de Atendimentos</h3>
+          <p>Gerenciando atendimentos para o projeto: <strong id="projeto-atendimento-nome">Nenhum projeto selecionado</strong></p>
+        </div>
+        <button class="btn-fechar-atendimento" type="button" onclick="document.getElementById('bloco-atendimentos').style.display='none'">✕</button>
+      </div>
+
+      <!-- Corpo Interno do Bloco de Atendimentos -->
+      <div class="atendimento-body-main">
+        
+        <!-- Botão Amarelo de Inserção dentro do card -->
+        <button class="btn-novo-atendimento-amarelo" type="button" onclick="addAttendance()">
+          + Novo Atendimento para este Projeto
+        </button>
+
+        <!-- Lista onde o JavaScript vai injetar os cartões (# NOVO REGISTRO...) -->
+        <div class="attendance-list" id="attendanceList"></div>
+
+        <!-- Botão Verde de Ação Final no Rodapé -->
+        <div class="atendimento-footer-actions">
+          <button class="btn-sincronizar-verde" type="button" onclick="finalizeAttendance()">
+            Finalizar e Sincronizar Atendimentos
+          </button>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <footer>

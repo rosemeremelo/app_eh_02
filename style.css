@@ -6,14 +6,14 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #F4F6F8;
+  font-family: 'DM Sans', Arial, sans-serif;
+  background-color: #F1F5F9; /* Fundo escuro imersivo combinado com o topo corporativo */
   color: #333333;
   min-height: 100vh;
 }
 
 main {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 40px auto 60px;
   padding: 0 20px;
   display: flex;
@@ -21,107 +21,141 @@ main {
   gap: 35px;
 }
 
-/* ── CONTAINER REUTILIZÁVEL (Usado nos dois blocos principais) ── */
+/* ── PADRONIZAÇÃO PREMIUM (Estilo Imagem 3 aplicado a todos os Cards) ── */
 .card-unificado,
-.card-atendimento-refinado {
+.card-atendimento-refinado,
+.card-atendimento-premium {
   background: #FFFFFF;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  padding: 35px;
-  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #1E293B;
+  overflow: hidden;
+  margin-bottom: 10px;
 }
 
-.card-unificado-header {
+/* Cabeçalhos Escuros Unificados */
+.card-unificado-header,
+.atendimento-header-main {
+  background: #111827; /* Fundo escuro idêntico em todos os blocos */
+  padding: 22px 28px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 25px;
-  gap: 15px;
-  border-bottom: 1px solid #E2E8F0;
-  padding-bottom: 15px;
+  align-items: center;
+  border-bottom: 4px solid #F5C200; /* Linha de destaque amarela FIAP */
 }
 
-.header-titulos h3 {
-  font-size: 1.4rem;
-  color: #1A202C;
+/* Ajuste de tipografia interna dos cabeçalhos */
+.header-titulos h3,
+.atendimento-titulos h3 {
+  color: #FFFFFF;
+  margin: 0 0 6px 0;
+  font-size: 1.45rem;
   font-weight: 700;
-  margin-bottom: 4px;
+  letter-spacing: 0.2px;
 }
 
-.header-titulos p {
-  font-size: 0.9rem;
-  color: #718096;
+.header-titulos p,
+.atendimento-titulos p {
+  color: #9CA3AF;
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
 }
 
-/* Botões do Topo dos Blocos */
-.btn-minimizar {
-  background-color: #22C55E;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-add-novo {
-  background-color: #0056B3;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 18px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.2s;
-}
-
-.btn-add-novo:hover {
-  background-color: #004085;
-}
-
-/* ── SUBSEÇÕES INTERNAS (Divisores Amarelos) ── */
-.subsecao-titulo {
+.header-titulos strong,
+.atendimento-titulos strong {
   color: #F5C200;
-  text-transform: uppercase;
-  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+}
+
+/* Áreas Internas (Corpos dos Cards) */
+.card-unificado-body,
+.atendimento-body-main {
+  padding: 30px;
+  background: #FFFFFF;
+}
+
+/* ── BOTÕES CORPORATIVOS DO TOPO ── */
+.btn-minimizar {
+  background-color: #10B981; /* Verde esmeralda elegante para o minimizar */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.btn-minimizar:hover {
+  background-color: #059669;
+  transform: translateY(-1px);
+}
+
+/* Botão de Fechar Circular Translúcido (X) */
+.btn-fechar-atendimento {
+  background: rgba(255, 255, 255, 0.08);
+  color: #9CA3AF;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-fechar-atendimento:hover {
+  background: rgba(239, 68, 68, 0.9);
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+/* ── SUBSEÇÕES INTERNAS DO FORMULÁRIO ── */
+.subsecao-titulo {
+  color: #111827;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
   padding-bottom: 6px;
   border-bottom: 2px solid #F5C200;
-  margin-top: 10px;
-  margin-bottom: 5px;
+  margin-top: 15px;
+  margin-bottom: 20px;
 }
 
-/* ── ALINHAMENTO DO FORMULÁRIO (Geral para os dois blocos) ── */
+/* ── ALINHAMENTO DO FORMULÁRIO ── */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .form-group.full { 
   grid-column: 1 / -1; 
 }
 
-/* Estilo padronizado de Labels para toda a aplicação */
 main label {
   font-size: 0.85rem;
-  color: #2D3748;
+  color: #1E293B;
   font-weight: 700;
-  text-transform: none;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-/* Estilo uniforme de Inputs para a área estática e dinâmica */
+/* Inputs Premium Clean */
 main input[type="text"],
 main input[type="email"],
 main input[type="tel"],
@@ -130,143 +164,108 @@ main input[type="time"],
 main select,
 main textarea {
   width: 100%;
-  background: #FFFFFF;
+  background: #F8FAFC;
   border: 1px solid #CBD5E1;
   border-radius: 6px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   font-size: 0.95rem;
-  color: #334155;
+  color: #0F172A;
   outline: none;
-  font-family: Arial, sans-serif;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+  transition: all 0.2s ease;
 }
 
 main input:focus, 
 main select:focus, 
 main textarea:focus {
-  border-color: #0056B3;
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+  background: #FFFFFF;
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
 }
 
 main textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 110px;
 }
 
-/* Botão Azul de Salvar (Qualificação) */
+/* ── BOTÕES DE AÇÃO INTERNOS ── */
+/* Botão Principal Escuro/Ouro */
 .btn-salvar-banco {
-  background-color: #0056B3;
+  background-color: #111827;
   color: #FFFFFF;
-  border: none;
+  border: 1px solid #1E293B;
   border-radius: 6px;
-  padding: 12px 24px;
+  padding: 14px 28px;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   align-self: flex-start;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
 }
 
 .btn-salvar-banco:hover {
-  background-color: #004085;
+  background-color: #1F2937;
+  transform: translateY(-1px);
 }
 
-/* ── ELEMENTOS DINÂMICOS (CARDS DE ATENDIMENTO) ── */
-.attendance-list {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  margin-top: 15px;
-}
-
-.attendance-entry {
-  background: #FFFFFF;
-  border: 1px solid #CBD5E1;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  overflow: hidden;
-  animation: surgimentoSuave 0.3s ease-out;
-}
-
-@keyframes surgimentoSuave {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.entry-header {
-  background-color: #F8FAFC;
-  padding: 12px 20px;
-  border-bottom: 1px solid #CBD5E1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.entry-seq {
-  font-size: 0.95rem;
+/* Botão Amarelo de Destaque */
+.btn-novo-atendimento-amarelo,
+.btn-add-novo {
+  background: #F5C200;
+  color: #111827;
+  border: none;
+  padding: 12px 22px;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: #1A202C;
-}
-
-.btn-remove {
-  background: transparent;
-  color: #E53E3E;
-  border: 1px solid #FED7D7;
-  padding: 5px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.btn-remove:hover {
-  background: #FFF5F5;
-  border-color: #E53E3E;
-}
-
-.entry-body {
-  padding: 20px;
-}
-
-/* ── ÁREA DE UPLOAD DE FOTOS CONFIGURADA ── */
-.photo-upload-area {
-  border: 2px dashed #CBD5E1 !important;
-  padding: 25px !important;
-  text-align: center;
-  background: #F8FAFC !important;
   border-radius: 6px;
   cursor: pointer;
-  display: block;
-  transition: all 0.2s;
+  margin-bottom: 25px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(245, 194, 0, 0.25);
 }
 
-.photo-upload-area:hover {
-  background: #F1F5F9 !important;
-  border-color: #0056B3 !important;
+.btn-novo-atendimento-amarelo:hover,
+.btn-add-novo:hover {
+  background: #E6B600;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(245, 194, 0, 0.35);
 }
 
-.photo-upload-area .upload-icon {
-  font-size: 1.8rem;
-  margin-bottom: 6px;
+/* Sincronizar / Finalizar */
+.btn-sincronizar-verde {
+  background: #10B981;
+  color: #FFFFFF;
+  border: none;
+  padding: 14px 28px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 
-.photo-upload-area p {
-  color: #64748B !important;
-  font-weight: 500 !important;
-  font-size: 0.85rem !important;
+.btn-sincronizar-verde:hover {
+  background: #059669;
+  transform: translateY(-1px);
 }
 
-/* ── ESTILIZAÇÃO DO BANCO DE EMPREENDIMENTOS QUALIFICADOS ── */
+/* ── TABELA / LINHAS DO BANCO DE EMPREENDIMENTOS ── */
 .banco-tabela-header {
   display: grid;
   grid-template-columns: 2.5fr 1.5fr 2fr 1.5fr;
   background-color: #F8FAFC;
-  padding: 12px 20px;
-  border-bottom: 1px solid #E2E8F0;
+  padding: 14px 20px;
+  border-bottom: 2px solid #E2E8F0;
   font-weight: 700;
-  font-size: 0.9rem;
-  color: #1A202C;
+  font-size: 0.85rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-top: 15px;
 }
 
@@ -274,180 +273,85 @@ main textarea {
   display: grid;
   grid-template-columns: 2.5fr 1.5fr 2fr 1.5fr;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #E2E8F0;
+  padding: 22px 20px;
+  border-bottom: 1px solid #F1F5F9;
   background: #FFFFFF;
-  animation: surgimentoSuave 0.3s ease-out;
+  transition: background 0.2s ease;
+}
+
+.empreendimento-linha:hover {
+  background: #F8FAFC;
 }
 
 .empresa-info h4 {
-  font-size: 1.05rem;
-  color: #1A1400;
+  font-size: 1.1rem;
+  color: #111827;
   font-weight: 700;
   margin-bottom: 4px;
 }
 
 .empresa-info p, .resp-info p, .contato-info p {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: #64748B;
-  margin: 2px 0;
+  margin: 3px 0;
 }
 
 .empresa-info .link-detalhes {
-  font-size: 0.8rem;
-  color: #0056B3;
-  text-decoration: underline;
+  font-size: 0.82rem;
+  color: #F5C200;
+  font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
   display: inline-block;
-  margin-top: 4px;
+  margin-top: 6px;
+  transition: color 0.2s;
 }
 
-/* Botão Azul de Abrir Atendimentos */
+.empresa-info .link-detalhes:hover {
+  color: #111827;
+  text-decoration: underline;
+}
+
 .btn-abrir-atendimentos {
-  background-color: #0056B3;
+  background-color: #111827;
   color: #FFFFFF;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: 6px;
+  padding: 10px 18px;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btn-abrir-atendimentos:hover {
-  background-color: #004085;
+  background-color: #1F2937;
+  transform: translateY(-1px);
 }
 
-/* Alinhamento dos botões de ação na direita */
 .col-acao-botoes {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
 }
 
 .btn-pdf-vermelho {
-  background-color: #DC2626;
+  background-color: #EF4444;
   color: #FFFFFF;
   border: none;
-  border-radius: 4px;
-  width: 34px;
-  height: 34px;
+  border-radius: 6px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-}
-/* Container Principal do Card de Atendimento */
-.card-atendimento-premium {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e2e8f0;
-    overflow: hidden;
-    margin-bottom: 30px;
-    font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s ease;
 }
 
-/* Cabeçalho Azul Corporativo do Card */
-.atendimento-header-main {
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    padding: 20px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 3px solid #f5c200; /* Linha de destaque amarela */
+.btn-pdf-vermelho:hover {
+  background-color: #DC2626;
+  transform: scale(1.05);
 }
 
-.atendimento-titulos h3 {
-    color: #ffffff;
-    margin: 0 0 5px 0;
-    font-size: 1.3rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.atendimento-titulos p {
-    color: #94a3b8;
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.atendimento-titulos strong {
-    color: #f5c200;
-}
-
-/* Botão de Fechar (X) no Cabeçalho */
-.btn-fechar-atendimento {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-}
-
-.btn-fechar-atendimento:hover {
-    background: #ef4444;
-    transform: scale(1.05);
-}
-
-/* Área Interna (Corpo) do Card */
-.atendimento-body-main {
-    padding: 25px;
-    background: #ffffff;
-}
-
-/* Botão Amarelo de Inserção */
-.btn-novo-atendimento-amarelo {
-    background: #f5c200;
-    color: #0f172a;
-    border: none;
-    padding: 12px 20px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-bottom: 25px;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(245, 194, 0, 0.3);
-}
-
-.btn-novo-atendimento-amarelo:hover {
-    background: #e0b000;
-    transform: translateY(-1px);
-}
-
-/* Rodapé do Card com as Ações Finais */
-.atendimento-footer-actions {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #e2e8f0;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* Botão Verde Sincronizar */
-.btn-sincronizar-verde {
-    background: #10b981;
-    color: #ffffff;
-    border: none;
-    padding: 12px 24px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
-}
-
-.btn-sincronizar-verde:hover {
-    background: #059669;
-    transform: translateY(-1px);
-}
+/* ── ELEMENTOS DINÂMICOS (CARDS DE

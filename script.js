@@ -250,6 +250,30 @@ function submitForm() {
 // Adiciona o primeiro atendimento automaticamente ao carregar
 addAttendance();
 
+function toggleFormulario() {
+  // Captura o corpo do formulário e o botão
+  const formBody = document.querySelector('.card-unificado .card-unificado-body');
+  const btnMinimizar = document.getElementById('btn-minimizar-form');
+  
+  if (!formBody || !btnMinimizar) return;
+
+  // Se estiver visível (ou se não houver estilo inline definido ainda), esconde
+  if (formBody.style.display === '' || formBody.style.display === 'block') {
+    formBody.style.display = 'none';
+    btnMinimizar.innerText = '+ Expandir Formulário';
+    
+    // Altera a cor do botão para verde igual ao seu padrão visual quando recolhido
+    btnMinimizar.style.backgroundColor = '#28a745'; 
+  } else {
+    // Se estiver escondido, mostra novamente
+    formBody.style.display = 'block';
+    btnMinimizar.innerText = '— Minimizar Formulário';
+    
+    // Restaura a cor original (deixe vazio se o estilo padrão já vier do CSS)
+    btnMinimizar.style.backgroundColor = ''; 
+  }
+}
+
 function abrirAtendimentosDoProjeto(nomeEmpresa, nomeResponsavel) {
   // 1. Mostra o bloco de atendimentos que estava escondido
   const blocoAtendimentos = document.getElementById('bloco-atendimentos');

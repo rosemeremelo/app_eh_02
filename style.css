@@ -7,7 +7,7 @@
 
 body {
   font-family: 'DM Sans', Arial, sans-serif;
-  background-color: #F1F5F9; /* Fundo escuro imersivo combinado com o topo corporativo */
+  background-color: #F1F5F9; /* Fundo cinza executivo claro, destacando os cards brancos */
   color: #333333;
   min-height: 100vh;
 }
@@ -21,7 +21,7 @@ main {
   gap: 35px;
 }
 
-/* ── PADRONIZAÇÃO PREMIUM (Estilo Imagem 3 aplicado a todos os Cards) ── */
+/* ── PADRONIZAÇÃO PREMIUM (Estilo Corporativo aplicado a todos os Cards) ── */
 .card-unificado,
 .card-atendimento-refinado,
 .card-atendimento-premium {
@@ -36,7 +36,7 @@ main {
 /* Cabeçalhos Escuros Unificados */
 .card-unificado-header,
 .atendimento-header-main {
-  background: #111827; /* Fundo escuro idêntico em todos os blocos */
+  background: #111827; /* Fundo escuro corporativo uniforme */
   padding: 22px 28px;
   display: flex;
   justify-content: space-between;
@@ -95,7 +95,7 @@ main {
   transform: translateY(-1px);
 }
 
-/* Botão de Fechar Circular Translúcido (X) */
+/* Botão de Fechar Circular (X) */
 .btn-fechar-atendimento {
   background: rgba(255, 255, 255, 0.08);
   color: #9CA3AF;
@@ -155,7 +155,7 @@ main label {
   letter-spacing: 0.02em;
 }
 
-/* Inputs Premium Clean */
+/* Inputs Premium Clean com a Melhoria de Transição Suave */
 main input[type="text"],
 main input[type="email"],
 main input[type="tel"],
@@ -172,7 +172,8 @@ main textarea {
   color: #0F172A;
   outline: none;
   font-family: inherit;
-  transition: all 0.2s ease;
+  /* MELHORIA SOLICITADA: Transição profissional ao focar nos campos */
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 main input:focus, 
@@ -354,4 +355,86 @@ main textarea {
   transform: scale(1.05);
 }
 
-/* ── ELEMENTOS DINÂMICOS (CARDS DE
+/* ── ATUALIZAÇÃO EXTRA: FORMULÁRIOS INTERNOS EM PREENCHIMENTO ── */
+.registro-preenchimento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FFF5F5; /* Fundo sutil de atenção */
+  padding: 14px 20px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid #FEE2E2;
+}
+
+.registro-status-titulo {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #DC2626; /* Vermelho sóbrio corporativo */
+  letter-spacing: 0.05em;
+}
+
+.btn-excluir-formulario {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #DC2626;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+
+.btn-excluir-formulario:hover {
+  background-color: #B91C1C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+.attendance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 15px;
+}
+
+.attendance-entry {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  animation: surgimentoSuave 0.3s ease-out;
+}
+
+@keyframes surgimentoSuave {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.entry-body {
+  padding: 25px;
+}
+
+/* ── ÁREA DE UPLOAD DE FOTOS CONFIGURADA ── */
+.photo-upload-area {
+  border: 2px dashed #CBD5E1 !important;
+  padding: 30px !important;
+  text-align: center;
+  background: #F8FAFC !important;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  transition: all 0.2s;
+}
+
+.photo-upload-area:hover {
+  background: #F1F5F9 !important;
+  border-color: #F5C200 !important;
+}

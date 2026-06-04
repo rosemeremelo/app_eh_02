@@ -6,16 +6,22 @@ function addAttendance() {
   const list = document.getElementById('attendanceList');
   const id = `att-${seq}`;
 
+  // Formata o número sequencial com dois dígitos (ex: 01, 02, 03...)
+  const numeroFormatado = String(seq).padStart(2, '0');
+
   const div = document.createElement('div');
   div.className = 'attendance-entry';
   div.id = id;
   
-  // Injeta a estrutura exata alinhada com os estilos do seu CSS unificado
   div.innerHTML = `
-    <div class="entry-header">
-      <span class="entry-seq"># NOVO REGISTRO EM PREENCHIMENTO</span>
-      <button class="btn-remove" type="button" onclick="removeAttendance('${id}')">Excluir</button>
+    <div class="registro-preenchimento-header">
+      <span class="registro-status-titulo">${numeroFormatado} - REGISTRO EM PREENCHIMENTO</span>
+      <button type="button" class="btn-excluir-formulario" onclick="removeAttendance('${id}')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+        Excluir Formulário
+      </button>
     </div>
+    
     <div class="entry-body">
       <div class="form-grid">
         

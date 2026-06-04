@@ -54,30 +54,33 @@ function addAttendance() {
           <input type="text" placeholder="Ex: Ajuste de Pitch, Validação Comercial, UX/UI..." />
         </div>
 
+       
+
         <div class="form-group full">
-          <label>Equipe de Mentores Vinculados * <span style="font-weight: normal; font-size: 0.75rem; color: #64748B;">(Segure CTRL para múltiplos)</span></label>
-          <select multiple style="height: 80px; padding: 5px;">
-            <option value="1">Prof. Coordenador FIAP (Coordenador)</option>
-            <option value="2">Aline Mendes (Mentor)</option>
-            <option value="3">Rosemere Melo (Administrador)</option>
-          </select>
+          <label>Equipe de Mentores Vinculados * <small style="color:#64748B; font-weight:normal;">(Digite o nome e aperte Enter para adicionar)</small></label>
+          <div class="mentores-wrapper">
+            <div class="mentores-tags-container" id="mentores-tags-container">
+              <input type="text" id="input-mentor-manual" placeholder="Ex: Prof. Carlos Silva..." onkeydown="handleMentorInput(event)">
+            </div>
+          </div>
         </div>
+
         
         <div class="form-group full">
           <label>Descrição Detalhada das Ações Realizadas *</label>
           <textarea placeholder="Relate as decisões tomadas..."></textarea>
         </div>
         
+                
         <div class="form-group full">
           <label>Evidências do Atendimento (Máximo 5 fotos)</label>
-          <label class="photo-upload-area" for="file-${seq}">
-            <input type="file" id="file-${seq}" accept="image/*" multiple onchange="handlePhotos(event, 'preview-${seq}')" />
-            <div style="color: #64748B; font-size: 0.9rem;">
-              <span style="background: #E2E8F0; padding: 5px 10px; border: 1px solid #CBD5E1; border-radius: 4px; color: #334155; margin-right: 8px; font-weight: bold;">Escolher Arquivos</span> Nenhum arquivo escolhido
-            </div>
+          <label class="photo-upload-area">
+            <input type="file" accept="image/*" multiple onchange="updateFileLabel(this)">
+            <span class="photo-upload-label">📸 Clique para selecionar fotos ou arraste aqui</span>
+            <small style="color: #64748B;">JPG, PNG, WEBP — múltiplas imagens aceitas</small>
           </label>
-          <div class="photo-preview" id="preview-${seq}" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
         </div>
+
 
       </div>
     </div>
@@ -296,4 +299,17 @@ function abrirAtendimentosDoProjeto(nomeEmpresa, nomeResponsavel) {
   
   // 5. Dá um foco visual rolando a página até o bloco de atendimentos
   blocoAtendimentos.scrollIntoView({ behavior: 'smooth' });
+}
+
+function updateFileLabel(input) {
+  const labelSpan = input.parentNode.querySelector('.photo-upload-label');
+  const filesCount = input.files.length;
+  
+  if (filesCount === 0) {
+    labelSpan.innerHTML = "📸 Clique para selecionar fotos ou arraste aqui";
+  } else if (filesCount === 1) {
+    labelSpan.innerHTML = "✅ 1 foto selecionada";
+  } else {
+    labelSpan.innerHTML = `✅ ${filesCount} fotos selecionadas`;
+  }
 }

@@ -1,4 +1,6 @@
 let attendanceCount = 0;
+// Banco de dados em memória para armazenar os projetos e seus respectivos atendimentos
+const bancoProjetos = {};
 
 function addAttendance() {
   attendanceCount++;
@@ -27,51 +29,47 @@ function addAttendance() {
         
         <div class="form-group">
           <label>Data *</label>
-          <input type="date" value="2026-06-01" />
+          <input type="date" class="att-data" value="2026-06-01" />
         </div>
         
         <div class="form-group">
           <label>Horário de Início *</label>
-          <input type="time" />
+          <input type="time" class="att-inicio" />
         </div>
 
         <div class="form-group">
           <label>Horário de Fim *</label>
-          <input type="time" />
+          <input type="time" class="att-fim" />
         </div>
         
         <div class="form-group">
           <label>Modalidade *</label>
-          <select>
-            <option value="online" selected>Online</option>
-            <option value="presencial">Presencial</option>
-            <option value="hibrido">Híbrido</option>
+          <select class="att-modalidade">
+            <option value="Online" selected>Online</option>
+            <option value="Presencial">Presencial</option>
+            <option value="Híbrido">Híbrido</option>
           </select>
         </div>
         
         <div class="form-group full">
           <label>Assunto da Mentoria *</label>
-          <input type="text" placeholder="Ex: Ajuste de Pitch, Validação Comercial, UX/UI..." />
+          <input type="text" class="att-assunto" placeholder="Ex: Ajuste de Pitch, Validação Comercial, UX/UI..." />
         </div>
-
-       
 
         <div class="form-group full">
           <label>Equipe de Mentores Vinculados * <small style="color:#64748B; font-weight:normal;">(Digite o nome e aperte Enter para adicionar)</small></label>
           <div class="mentores-wrapper">
-            <div class="mentores-tags-container" id="mentores-tags-container">
-              <input type="text" id="input-mentor-manual" placeholder="Ex: Prof. Carlos Silva..." onkeydown="handleMentorInput(event)">
+            <div class="mentores-tags-container" id="mentores-tags-container-${id}">
+              <input type="text" id="input-mentor-manual" placeholder="Ex: Prof. Carlos Silva..." onkeydown="handleMentorInput(event, '${id}')">
             </div>
           </div>
         </div>
-
         
         <div class="form-group full">
           <label>Descrição Detalhada das Ações Realizadas *</label>
-          <textarea placeholder="Relate as decisões tomadas..."></textarea>
+          <textarea class="att-descricao" placeholder="Relate as decisões tomadas..."></textarea>
         </div>
         
-                
         <div class="form-group full">
           <label>Evidências do Atendimento (Máximo 5 fotos)</label>
           <label class="photo-upload-area">
@@ -81,13 +79,31 @@ function addAttendance() {
           </label>
         </div>
 
-
       </div>
     </div>
   `;
 
   list.appendChild(div);
   div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Suporte para o campo de tags manual de mentores
+function handleMentorInput(event, idContainer) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const input = event.target;
+    const nomeMentor = input.value.trim();
+    const container = document.getElementById(`mentores-tags-container-${idContainer}`);
+    
+    if (nomeMentor !== '') {
+      const span = document.createElement('span');
+      span.className = 'mentor-tag';
+      span.style.cssText = "background:#e2e8f0; padding:4px 8px; border-radius:4px; margin-right:5px; font-size:12px; display:inline-flex; align-items:center; gap:5px;";
+      span.innerHTML = `${nomeMentor} <b style="cursor:pointer;color:#ef4444;" onclick="this.parentNode.remove()">✕</b>`;
+      container.insertBefore(span, input);
+      input.value = '';
+    }
+  }
 }
 
 function removeAttendance(id) {
@@ -101,6 +117,36 @@ function removeAttendance(id) {
 }
 
 function finalizeAttendance() {
+  const projetoNomeAtivo = document.getElementById('projeto-atendimento-nome').getAttribute('data-projeto-key');
+  
+  if (!projetoNomeAtivo || !bancoProjetos[projetoNomeAtivo]) {
+    alert("Nenhum projeto ativo selecionado para sincronizar!");
+    return;
+  }
+
+  const entries = document.querySelectorAll('.attendance-list .attendance-entry');
+  const atendimentosSalvos = [];
+
+  entries.forEach(entry => {
+    const tagElements = entry.querySelectorAll('.mentor-tag');
+    const mentoresArray = [];
+    tagElements.forEach(tag => {
+      mentoresArray.push(tag.textContent.replace('✕', '').trim());
+    });
+
+    const dados = {
+      data: entry.querySelector('.att-data').value,
+      inicio: entry.querySelector('.att-inicio').value,
+      fim: entry.querySelector('.att-fim').value,
+      modalidade: entry.querySelector('.att-modalidade').value,
+      assunto: entry.querySelector('.att-assunto').value,
+      mentores: mentoresArray.join(', '),
+      descricao: entry.querySelector('.att-descricao').value
+    };
+    atendimentosSalvos.push(dados);
+  });
+
+  bancoProjetos[projetoNomeAtivo].atendimentos = atendimentosSalvos;
   alert("Atendimentos salvos e sincronizados com sucesso com o banco de dados corporativo!");
 }
 
@@ -183,7 +229,6 @@ phoneMask(document.getElementById('tel-com'));
 phoneMask(document.getElementById('tel-pes'));
 
 function submitForm() {
-  // 1. Capturar os elementos dos inputs do formulário unificado
   const nomeEmpresaInput = document.querySelector('input[placeholder="Nome fantasia ou marca"]');
   const cnpjInput = document.getElementById('cnpj');
   const telComInput = document.getElementById('tel-com');
@@ -195,25 +240,38 @@ function submitForm() {
   const emailInput = document.querySelector('input[placeholder="responsavel@email.com"]');
   const telPesInput = document.getElementById('tel-pes');
 
-  // 2. Validação simples de campos obrigatórios
   if (!nomeEmpresaInput.value || !nomeRespInput.value || !emailInput.value) {
     alert("Por favor, preencha os campos obrigatórios (Nome da Empresa, Nome do Responsável e E-mail)!");
     return;
   }
 
-  // 3. Tornar visível a seção de Banco de Empreendimentos se estiver oculta
+  const projetoKey = nomeEmpresaInput.value.trim();
+
+  bancoProjetos[projetoKey] = {
+    nome: nomeEmpresaInput.value,
+    cnpj: cnpjInput.value || 'Não informado',
+    telefoneComercial: telComInput.value || 'Não informado',
+    endereco: enderecoInput.value || 'Não informado',
+    demandaInicial: demandaInput.value || 'Não informada',
+    responsavelNome: nomeRespInput.value,
+    responsavelCpf: cpfInput.value || 'Não informado',
+    responsavelEmail: emailInput.value,
+    responsavelTelefone: telPesInput.value || 'Não informado',
+    atendimentos: []
+  };
+
   const secaoBanco = document.getElementById('secao-banco-empreendimentos');
   secaoBanco.style.display = 'block';
 
-  // Guardar os valores em variáveis de texto limpas para passar com segurança na string do onclick
-  const nomeEmpresaValor = nomeEmpresaInput.value.replace(/'/g, "\\'");
-  const nomeRespValor = nomeRespInput.value.replace(/'/g, "\\'");
+  // ESCAPE DE SEGURANÇA: Garante strings limpas para passar como parâmetros das funções HTML
+  const nomeEmpresaValor = nomeEmpresaInput.value.replace(/'/g, "\\'").trim();
+  const nomeRespValor = nomeRespInput.value.replace(/'/g, "\\'").trim();
 
-  // 4. Criar a estrutura HTML com o onclick CORRIGIDO chamando a função abrirAtendimentosDoProjeto
   const listaSalvos = document.getElementById('lista-empreendimentos-salvos');
   const novaLinha = document.createElement('div');
   novaLinha.className = 'empreendimento-linha';
 
+  // CORREÇÃO CRÍTICA: Envolver os parâmetros literais com aspas escapadas (\"...\") para evitar quebra de strings com espaços
   novaLinha.innerHTML = `
     <div class="empresa-info">
       <h4>${nomeEmpresaInput.value}</h4>
@@ -229,22 +287,19 @@ function submitForm() {
       <p>${telComInput.value || telPesInput.value || 'Não informado'}</p>
     </div>
     <div class="col-acao-botoes">
-      <button class="btn-abrir-atendimentos" type="button" onclick="abrirAtendimentosDoProjeto('${nomeEmpresaValor}', '${nomeRespValor}')">Abrir Atendimentos</button>
-      <button class="btn-pdf-vermelho" type="button" title="Gerar PDF">📄</button>
+      <button class="btn-abrir-atendimentos" type="button" onclick="abrirAtendimentosDoProjeto(\"${nomeEmpresaValor}\", \"${nomeRespValor}\")">Abrir Atendimentos</button>
+      <button class="btn-pdf-vermelho" type="button" onclick="gerarPdfConsolidado(\"${nomeEmpresaValor}\")" title="Gerar PDF">📄</button>
     </div>
   `;
 
-  // Adicionar o novo item ao final da lista do banco
   listaSalvos.appendChild(novaLinha);
 
-  // 5. Exibir o Toast de Sucesso nativo da sua aplicação
   const toast = document.getElementById('toast');
   if (toast) {
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3200);
   }
 
-  // 6. Limpar o formulário de qualificação para permitir novos cadastros
   nomeEmpresaInput.value = '';
   cnpjInput.value = '';
   telComInput.value = '';
@@ -260,44 +315,32 @@ function submitForm() {
 addAttendance();
 
 function toggleFormulario() {
-  // Captura o corpo do formulário e o botão
   const formBody = document.querySelector('.card-unificado .card-unificado-body');
   const btnMinimizar = document.getElementById('btn-minimizar-form');
   
   if (!formBody || !btnMinimizar) return;
 
-  // Se estiver visível (ou se não houver estilo inline definido ainda), esconde
   if (formBody.style.display === '' || formBody.style.display === 'block') {
     formBody.style.display = 'none';
     btnMinimizar.innerText = '+ Expandir Formulário';
-    
-    // Altera a cor do botão para verde igual ao seu padrão visual quando recolhido
     btnMinimizar.style.backgroundColor = '#28a745'; 
   } else {
-    // Se estiver escondido, mostra novamente
     formBody.style.display = 'block';
     btnMinimizar.innerText = '— Minimizar Formulário';
-    
-    // Restaura a cor original (deixe vazio se o estilo padrão já vier do CSS)
     btnMinimizar.style.backgroundColor = ''; 
   }
 }
 
 function abrirAtendimentosDoProjeto(nomeEmpresa, nomeResponsavel) {
-  // 1. Mostra o bloco de atendimentos que estava escondido
   const blocoAtendimentos = document.getElementById('bloco-atendimentos');
   blocoAtendimentos.style.display = 'block';
   
-  // 2. Atualiza textualmente o cabeçalho azul com os dados dinâmicos
-  document.getElementById('projeto-atendimento-nome').innerText = `${nomeEmpresa} (Resp: ${nomeResponsavel})`;
+  const headerNome = document.getElementById('projeto-atendimento-nome');
+  headerNome.innerText = `${nomeEmpresa} (Resp: ${nomeResponsavel})`;
+  headerNome.setAttribute('data-projeto-key', nomeEmpresa.trim());
   
-  // 3. Limpa históricos anteriores que estavam abertos na tela antes de listar os novos
   document.getElementById('attendanceList').innerHTML = '';
-  
-  // 4. Cria automaticamente o primeiro card de atendimento em branco para começar a preencher
   addAttendance();
-  
-  // 5. Dá um foco visual rolando a página até o bloco de atendimentos
   blocoAtendimentos.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -312,4 +355,175 @@ function updateFileLabel(input) {
   } else {
     labelSpan.innerHTML = `✅ ${filesCount} fotos selecionadas`;
   }
+}
+
+// REVISÃO COMPLETA E CORREÇÃO DO ENGINE DO PDF
+function gerarPdfConsolidado(projetoKey) {
+  const projeto = bancoProjetos[projetoKey.trim()]; 
+
+  if (!projeto) {
+    alert("Dados do projeto não localizados para emissão do relatório!");
+    return;
+  }
+
+  const elementoPdf = document.createElement('div');
+  elementoPdf.id = 'container-temporario-pdf'; 
+  
+  elementoPdf.style.cssText = `
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 25mm;
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    font-family: Arial, sans-serif !important;
+    z-index: -99999;
+    opacity: 1 !important;
+    display: block !important;
+    visibility: visible !important;
+    box-sizing: border-box;
+  `;
+
+  // Montagem estruturada do HTML Interno (Garante Empreendimento + Empreendedor + Histórico)
+  let htmlDocumento = `
+    <div style="border-bottom: 3px solid #F5C200; padding-bottom: 15px; margin-bottom: 25px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <td>
+            <h1 style="font-size: 22px; margin: 0; color: #111827; text-transform: uppercase; font-family: Arial, sans-serif; font-weight: bold;">Relatório de Acompanhamento</h1>
+            <p style="font-size: 12px; margin: 4px 0 0 0; color: #4B5563;">Escritório Híbrido — Colorama · UFR</p>
+          </td>
+          <td style="text-align: right; font-size: 12px; color: #6B7280; vertical-align: middle;">
+            <strong>Emitido em:</strong> ${new Date().toLocaleDateString('pt-BR')}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-bottom: 25px;">
+      <h2 style="font-size: 14px; background: #111827; padding: 6px 10px; color: #FFFFFF; margin: 0 0 12px 0; border-left: 4px solid #F5C200; text-transform: uppercase; letter-spacing: 0.5px; font-family: Arial, sans-serif;">1. Dados do Empreendimento</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 12px; font-family: Arial, sans-serif;">
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold; width: 25%;">Razão/Nome Fantasia:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.nome}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold;">CNPJ:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.cnpj}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold;">Telefone Comercial:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.telefoneComercial}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold;">Endereço Corporativo:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.endereco}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold; vertical-align: top;">Demanda Inicial:</td>
+          <td style="padding: 5px 0; color: #374151; line-height: 1.4; white-space: pre-line;">${projeto.demandaInicial}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-bottom: 25px;">
+      <h2 style="font-size: 14px; background: #111827; padding: 6px 10px; color: #FFFFFF; margin: 0 0 12px 0; border-left: 4px solid #F5C200; text-transform: uppercase; letter-spacing: 0.5px; font-family: Arial, sans-serif;">2. Dados do Empreendedor (Responsável)</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 12px; font-family: Arial, sans-serif;">
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold; width: 25%;">Nome do Responsável:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.responsavelNome}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold;">CPF:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.responsavelCpf}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold;">E-mail de Contato:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.responsavelEmail}</td>
+        </tr>
+        <tr>
+          <td style="padding: 5px 0; font-weight: bold;">Telefone Pessoal:</td>
+          <td style="padding: 5px 0; color: #374151;">${projeto.responsavelTelefone}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <h2 style="font-size: 14px; background: #111827; padding: 6px 10px; color: #FFFFFF; margin: 0 0 15px 0; border-left: 4px solid #F5C200; text-transform: uppercase; letter-spacing: 0.5px; font-family: Arial, sans-serif;">3. Histórico de Atendimentos Realizados</h2>
+  `;
+
+  if (!projeto.atendimentos || projeto.atendimentos.length === 0) {
+    htmlDocumento += `
+      <div style="border: 1px dashed #CBD5E1; padding: 15px; text-align: center; border-radius: 6px;">
+        <p style="font-size: 12px; color: #6B7280; font-style: italic; margin: 0;">
+          Nenhum registro de atendimento foi vinculado a este projeto. Certifique-se de clicar no botão verde "Finalizar e Sincronizar Atendimentos" antes de gerar este PDF.
+        </p>
+      </div>
+    `;
+  } else {
+    projeto.atendimentos.forEach((atendimento, index) => {
+      htmlDocumento += `
+        <div style="border: 1px solid #CBD5E1; border-radius: 6px; padding: 15px; margin-bottom: 15px; background: #F8FAFC; page-break-inside: avoid; font-family: Arial, sans-serif;">
+          <table style="width: 100%; border-collapse: collapse; border-bottom: 1px solid #E2E8F0; padding-bottom: 6px; margin-bottom: 8px;">
+            <tr>
+              <td style="font-size: 12px; font-weight: bold; color: #111827;">
+                Sessão de Atendimento #${String(index + 1).padStart(2, '0')} — Modalidade: ${atendimento.modalidade}
+              </td>
+              <td style="text-align: right; font-size: 11px; color: #64748B;">
+                <strong>Data:</strong> ${atendimento.data} | <strong>Horário:</strong> ${atendimento.inicio} às ${atendimento.fim}
+              </td>
+            </tr>
+          </table>
+          
+          <div style="font-size: 12px; margin-bottom: 6px;">
+            <strong>Assunto Principal:</strong> <span style="color: #1E293B; font-weight: 600;">${atendimento.assunto || 'Não especificado'}</span>
+          </div>
+
+          <div style="font-size: 12px; margin-bottom: 8px;">
+            <strong>Corpo de Mentores:</strong> <span style="color: #334155;">${atendimento.mentores || 'Sem mentores alocados'}</span>
+          </div>
+          
+          <div style="font-size: 12px; line-height: 1.4; margin-top: 8px;">
+            <strong>Relatório Técnico das Ações Realizadas:</strong><br>
+            <div style="color: #475569; margin-top: 4px; white-space: pre-line; background: #FFFFFF; padding: 8px; border: 1px solid #E2E8F0; border-radius: 4px;">${atendimento.descricao || 'Nenhum detalhe técnico inserido.'}</div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  htmlDocumento += `</div>`; 
+  elementoPdf.innerHTML = htmlDocumento;
+  document.body.appendChild(elementoPdf);
+
+  const opcoes = {
+    margin:       15,
+    filename:     `Relatorio_Consolidado_${projeto.nome.replace(/\s+/g, '_')}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      logging: false,
+      scrollY: 0,
+      scrollX: 0
+    },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Temporizador para sincronismo assíncrono perfeito do canvas
+  setTimeout(() => {
+    html2pdf()
+      .set(opcoes)
+      .from(elementoPdf)
+      .save()
+      .then(() => {
+        const removerElementofalso = document.getElementById('container-temporario-pdf');
+        if (removerElementofalso) removerElementofalso.remove();
+      })
+      .catch((erro) => {
+        console.error("Erro interno ao processar folha:", erro);
+      });
+  }, 500);
 }

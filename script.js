@@ -11,6 +11,38 @@ if (dadosSalvos) {
 
 let attendanceCount = 0;
 
+// ==========================================
+// GERENCIAMENTO DE ATENDIMENTOS EVOLUÍDO
+// ==========================================
+
+function abrirAtendimentosDoProjeto(nomeEmpresa, nomeResponsavel) {
+  const blocoAtendimentos = document.getElementById('bloco-atendimentos');
+  blocoAtendimentos.style.display = 'block';
+  
+  // Guarda o ID (nome) da empresa no nosso campo oculto para controle
+  document.getElementById('projeto-ativo-id').value = nomeEmpresa;
+  document.getElementById('projeto-atendimento-nome').innerText = `${nomeEmpresa} (Resp: ${nomeResponsavel})`;
+  
+  // Limpa a área de exibição
+  const list = document.getElementById('attendanceList');
+  list.innerHTML = '';
+
+  // Busca o projeto no nosso banco de dados global
+  const projeto = bancoEmpreendimentos.find(emp => emp.nomeEmpresa.trim() === nomeEmpresa.trim());
+  
+  // Se o projeto já tiver atendimentos salvos anteriormente, renderiza eles na tela!
+  if (projeto && projeto.atendimentos && projeto.atendimentos.length > 0) {
+    projeto.atendimentos.forEach((att, index) => {
+      renderizarCardAtendimentoSalvo(att, index + 1);
+    });
+  } else {
+    // Se não tiver nenhum, abre um em branco para iniciar o primeiro preenchimento
+    addAttendance();
+  }
+
+  blocoAtendimentos.scrollIntoView({ behavior: 'smooth' });
+}
+
 function addAttendance() {
   attendanceCount++;
   const seq = attendanceCount;
@@ -34,22 +66,22 @@ function addAttendance() {
       <div class="form-grid">
         <div class="form-group">
           <label for="date-${seq}">Data *</label>
-          <input type="date" id="date-${seq}" value="2026-06-01" />
+          <input type="date" id="date-${seq}" class="att-data" value="2026-06-01" />
         </div>
         
         <div class="form-group">
           <label for="time-start-${seq}">Horário de Início *</label>
-          <input type="time" id="time-start-${seq}" />
+          <input type="time" id="time-start-${seq}" class="att-inicio" />
         </div>
 
         <div class="form-group">
           <label for="time-end-${seq}">Horário de Fim *</label>
-          <input type="time" id="time-end-${seq}" />
+          <input type="time" id="time-end-${seq}" class="att-fim" />
         </div>
         
         <div class="form-group">
           <label for="modalidade-${seq}">Modalidade *</label>
-          <select id="modalidade-${seq}">
+          <select id="modalidade-${seq}" class="att-modalidade">
             <option value="online" selected>Online</option>
             <option value="presencial">Presencial</option>
             <option value="hibrido">Híbrido</option>
@@ -58,12 +90,12 @@ function addAttendance() {
         
         <div class="form-group full">
           <label for="assunto-${seq}">Assunto da Mentoria *</label>
-          <input type="text" id="assunto-${seq}" placeholder="Ex: Ajuste de Pitch, Validação Comercial, UX/UI..." />
+          <input type="text" id="assunto-${seq}" class="att-assunto" placeholder="Ex: Ajuste de Pitch, Validação Comercial, UX/UI..." />
         </div>
 
         <div class="form-group full">
           <label for="mentores-${seq}">Equipe de Mentores Vinculados *</label>
-          <select id="mentores-${seq}" multiple style="height: 80px; padding: 5px;">
+          <select id="mentores-${seq}" class="att-mentores" multiple style="height: 80px; padding: 5px;">
             <option value="1">Prof. Coordenador FIAP (Coordenador)</option>
             <option value="2">Aline Mendes (Mentor)</option>
             <option value="3">Rosemere Melo (Administrador)</option>
@@ -72,7 +104,7 @@ function addAttendance() {
         
         <div class="form-group full">
           <label for="desc-${seq}">Descrição Detalhada das Ações Realizadas *</label>
-          <textarea id="desc-${seq}" placeholder="Relate as decisões tomadas..."></textarea>
+          <textarea id="desc-${seq}" class="att-desc" placeholder="Relate as decisões tomadas..."></textarea>
         </div>
         
         <div class="form-group full">
@@ -104,8 +136,121 @@ function removeAttendance(id) {
   }
 }
 
+// Nova função auxiliar para desenhar na tela os atendimentos que já foram salvos no passado
+function renderizarCardAtendimentoSalvo(att, numero) {
+  const list = document.getElementById('attendanceList');
+  const numeroFormatado = String(numero).padStart(2, '0');
+  const div = document.createElement('div');
+  div.className = 'attendance-entry';
+  div.style.borderLeft = '4px solid #28a745'; // Borda verde indicando que está salvo seguro
+
+  // Monta as miniaturas de evidências que foram salvas em formato string
+  let fotosHtml = '';
+  if (att.fotos && att.fotos.length > 0) {
+    att.fotos.forEach(fotoBase64 => {
+      fotosHtml += `
+        <div class="photo-thumb" style="position: relative; width: 80px; height: 80px;">
+          <img src="${fotoBase64}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 4px;" alt="Evidência Registrada" />
+        </div>`;
+    });
+  } else {
+    fotosHtml = '<span style="color: #94A3B8; font-style: italic; font-size: 13px;">Nenhuma evidência anexada.</span>';
+  }
+
+  div.innerHTML = `
+    <div class="registro-preenchimento-header" style="background: #f0fdf4;">
+      <span class="registro-status-titulo" style="color: #16a34a;">✅ ${numeroFormatado} - ATENDIMENTO SALVO E REGISTRADO</span>
+    </div>
+    <div class="entry-body" style="background: #fafafa; opacity: 0.95;">
+      <div class="form-grid">
+        <div class="form-group"><strong>Data:</strong> <p>${att.data}</p></div>
+        <div class="form-group"><strong>Início:</strong> <p>${att.inicio}</p></div>
+        <div class="form-group"><strong>Fim:</strong> <p>${att.fim}</p></div>
+        <div class="form-group"><strong>Modalidade:</strong> <p style="text-transform: capitalize;">${att.modalidade}</p></div>
+        <div class="form-group full"><strong>Assunto:</strong> <p>${att.assunto}</p></div>
+        <div class="form-group full"><strong>Descrição:</strong> <p style="white-space: pre-line;">${att.descricao}</p></div>
+        <div class="form-group full">
+          <strong>Evidências Registradas:</strong>
+          <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">${fotosHtml}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  list.appendChild(div);
+}
+
 function finalizeAttendance() {
-  alert("Atendimentos salvos e sincronizados com sucesso com o banco de dados corporativo!");
+  const nomeEmpresaAtiva = document.getElementById('projeto-ativo-id').value;
+  
+  if (!nomeEmpresaAtiva) {
+    alert("Nenhum projeto ativo selecionado para salvar.");
+    return;
+  }
+
+  // Localiza o projeto no nosso array global
+  const projetoIndex = bancoEmpreendimentos.findIndex(emp => emp.nomeEmpresa.trim() === nomeEmpresaAtiva.trim());
+
+  if (projetoIndex === -1) {
+    alert("Erro ao localizar o empreendimento ativo.");
+    return;
+  }
+
+  // Captura todos os blocos de atendimento que estão abertos na tela
+  const cardsAtendimento = document.querySelectorAll('#attendanceList .attendance-entry');
+  const atendimentosColetados = [];
+
+  cardsAtendimento.forEach(card => {
+    // Captura os inputs de dentro do card, ignorando se for um card puramente estático já salvo
+    const inputData = card.querySelector('.att-data');
+    if (!inputData) return; // Se for um já gravado, pula
+
+    const inputInicio = card.querySelector('.att-inicio').value;
+    const inputFim = card.querySelector('.att-fim').value;
+    const inputModalidade = card.querySelector('.att-modalidade').value;
+    const inputAssunto = card.querySelector('.att-assunto').value;
+    const inputDesc = card.querySelector('.att-desc').value;
+
+    // Varre e guarda as fotos anexadas (que já estão convertidas em base64 no preview)
+    const imagensDoCard = card.querySelectorAll('.photo-preview img');
+    const fotosDoCard = [];
+    imagensDoCard.forEach(img => {
+      fotosDoCard.push(img.src);
+    });
+
+    // Validação mínima de preenchimento dos campos obrigatórios
+    if (!inputAssunto || !inputDesc) {
+      return; 
+    }
+
+    atendimentosColetados.push({
+      data: inputData.value,
+      inicio: inputInicio || '--:--',
+      fim: inputFim || '--:--',
+      modalidade: inputModalidade,
+      assunto: inputAssunto,
+      descricao: inputDesc,
+      fotos: fotosDoCard
+    });
+  });
+
+  // Se o projeto nunca teve a lista de atendimentos iniciada, criamos ela vazia
+  if (!bancoEmpreendimentos[projetoIndex].atendimentos) {
+    bancoEmpreendimentos[projetoIndex].atendimentos = [];
+  }
+
+  // Junta os novos atendimentos preenchidos aos já existentes do projeto
+  bancoEmpreendimentos[projetoIndex].atendimentos = [
+    ...bancoEmpreendimentos[projetoIndex].atendimentos, 
+    ...atendimentosColetados
+  ];
+
+  // Salva de forma definitiva no LocalStorage corporativo do navegador
+  localStorage.setItem('fiap_empreendimentos', JSON.stringify(bancoEmpreendimentos));
+
+  alert("Histórico de atendimentos salvo e sincronizado com sucesso com o banco de dados corporativo!");
+  
+  // Atualiza a visualização reabrindo o bloco para exibir os cards travados como salvos
+  abrirAtendimentosDoProjeto(bancoEmpreendimentos[projetoIndex].nomeEmpresa, bancoEmpreendimentos[projetoIndex].nomeResponsavel);
 }
 
 function handlePhotos(event, previewId) {
@@ -212,7 +357,8 @@ function submitForm() {
     nomeResponsavel: nomeRespInput.value,
     cpf: cpfInput.value || 'Não informado',
     email: emailInput.value,
-    telefone: telComInput.value || telPesInput.value || 'Não informado'
+    telefone: telComInput.value || telPesInput.value || 'Não informado',
+    atendimentos: [] // Inicializa a lista de atendimentos vazia
   };
 
   // Adiciona o novo objeto ao nosso array global
@@ -258,14 +404,6 @@ function toggleFormulario() {
     btnMinimizar.innerText = '— Minimizar Formulário';
     btnMinimizar.style.backgroundColor = ''; 
   }
-}
-
-function abrirAtendimentosDoProjeto(nomeEmpresa, nomeResponsavel) {
-  const blocoAtendimentos = document.getElementById('bloco-atendimentos');
-  blocoAtendimentos.style.display = 'block';
-  document.getElementById('projeto-atendimento-nome').innerText = `${nomeEmpresa} (Resp: ${nomeResponsavel})`;
-  document.getElementById('attendanceList').innerHTML = '';
-  blocoAtendimentos.scrollIntoView({ behavior: 'smooth' });
 }
 
 function updateFileLabel(input) {
@@ -328,7 +466,6 @@ function renderizarListaEmpreendimentos() {
 // ==========================================
 
 function verDetalhesDoCadastro(nomeChave) {
-  // Correção: Busca no array correto (bancoEmpreendimentos) usando o nome da empresa
   const projeto = bancoEmpreendimentos.find(emp => emp.nomeEmpresa.trim() === nomeChave.trim());
 
   if (!projeto) {
@@ -389,5 +526,4 @@ function verDetalhesDoCadastro(nomeChave) {
 }
 
 // Execuções Iniciais Obrigatórias ao Carregar a Página
-addAttendance();
 renderizarListaEmpreendimentos();
